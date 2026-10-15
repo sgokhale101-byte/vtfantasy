@@ -1,4 +1,4 @@
-# VT Fantasy dashboard (v1.3.2)
+# VT Fantasy dashboard (v1.3.3)
 
 Live dashboard for ESPN league 1299098102, built from the Boys of Chantilly dashboard (v2.4.2).
 
@@ -73,3 +73,7 @@ Publish directory `public`, functions in `netlify/functions` (netlify.toml sets 
 ## 1.3.2
 - When someone picks Alexis's team in "I'm", the summary card shows a "Jeremy is a bitch" card (same red card Boys of
   Chantilly uses; `SPECIAL_CARDS` in index.html).
+
+## 1.3.3
+- Recap card: Awards and Record books are locked side by side (left and right) on every phone. The layout no longer
+  depends on a CSS feature (`:has`) that some phone browsers don't refresh after the record books load.
