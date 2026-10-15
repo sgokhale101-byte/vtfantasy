@@ -1,4 +1,4 @@
-# VT Fantasy dashboard (v1.3.3)
+# VT Fantasy dashboard (v1.3.4)
 
 Live dashboard for ESPN league 1299098102, built from the Boys of Chantilly dashboard (v2.4.2).
 
@@ -28,7 +28,8 @@ token kept on that phone; POST `save` stores the list (Netlify Blobs, `tiers/v1`
 (`team:<id>`) or free text, up to 80, in tiers S, A, B, C, D.
 
 ## Logo
-`public/logo.png` and `public/icons/*` are a temporary "VT" badge. Replace them with the turkey logo.
+`public/logo.png` and `public/icons/*` are a temporary "VT" badge. Replace them with the turkey logo. The home-screen icon
+and favicon are also built into the `<head>` of index.html as data URIs, so swap those too when the logo changes.
 
 ## Deploy
 Publish directory `public`, functions in `netlify/functions` (netlify.toml sets both). Deploy from GitHub.
@@ -77,3 +78,7 @@ Publish directory `public`, functions in `netlify/functions` (netlify.toml sets 
 ## 1.3.3
 - Recap card: Awards and Record books are locked side by side (left and right) on every phone. The layout no longer
   depends on a CSS feature (`:has`) that some phone browsers don't refresh after the record books load.
+
+## 1.3.4
+- Home-screen icon: the VT logo is built into the page (apple-touch-icon and favicon as data URIs) and the manifest is
+  requested with credentials, so phones get the logo even with Netlify's visitor login turned on.
