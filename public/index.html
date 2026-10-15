@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#1F0A10">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --black: #000000;
@@ -331,7 +331,7 @@
     .pick .opt { min-height: 104px; padding: 10px; }
     .pick .opt .chance b { font-size: 22px; }
 
-    .toggle { display: grid; grid-template-columns: repeat(5, 1fr); width: 100%; border-radius: 999px; gap: 0; }
+    .toggle { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; border-radius: 16px; gap: 2px; }
     .toggle button { font-size: 13px; }
     .toggle button { padding: 9px 4px; }
     .toggle .full { display: none; } .toggle .short { display: inline; }
@@ -976,6 +976,106 @@
   .te-add { display: flex; gap: 8px; margin-top: 10px; }
   .te-add input, .tp-form input { flex: 1; min-width: 0; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; color: var(--white); font-size: 15px; }
   .tp-form { display: flex; gap: 8px; margin: 6px 0 4px; }
+
+  /* Median Watch */
+  .mw-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+  .mw-tile { background: var(--surface); border-radius: 14px; padding: 12px; min-width: 0; }
+  .mw-tile.accent { background: var(--royal); color: #fff; }
+  .mw-tile.accent .mw-k, .mw-tile.accent .mw-s { color: rgba(255,255,255,.85); }
+  .mw-k { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .mw-v { font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1.1; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .mw-s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .mw-list { display: grid; gap: 8px; }
+  .mw-row { display: grid; grid-template-columns: 26px 1fr auto; grid-template-areas: "rank team now" "rank detail detail"; gap: 4px 10px; align-items: center;
+    background: var(--surface); border-radius: 14px; padding: 12px; border-left: 4px solid transparent; }
+  .mw-row.up { border-left-color: #22C55E; } .mw-row.down { border-left-color: var(--line); }
+  .mw-row.me { box-shadow: inset 0 0 0 2px var(--violet); }
+  .mw-rank { grid-area: rank; font-family: var(--display); font-weight: 800; font-size: 18px; color: var(--muted); align-self: start; padding-top: 4px; }
+  .mw-team { grid-area: team; display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .mw-team .logo-sm { width: 34px; height: 34px; flex: none; }
+  .mw-who { min-width: 0; } .mw-name { font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mw-mgr { font-size: 13px; color: var(--muted); }
+  .mw-now { grid-area: now; text-align: right; }
+  .mw-score { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .mw-tag { font-size: 11.5px; font-weight: 800; margin-top: 3px; color: var(--muted); }
+  .mw-tag.up { color: #22C55E; } .mw-tag.down { color: #F87171; }
+  .mw-detail { grid-area: detail; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); }
+  .mw-proj b { font-weight: 800; } .mw-proj.up b { color: #22C55E; } .mw-proj.down b { color: #F87171; }
+  .mw-line { display: flex; align-items: center; gap: 10px; color: var(--violet); font-weight: 800; font-size: 13px; margin: 4px 0; }
+  .mw-line::before, .mw-line::after { content: ""; flex: 1; border-top: 2px dashed var(--violet); }
+  :root[data-theme="light"] .mw-tag.up, :root[data-theme="light"] .mw-proj.up b { color: #15803D; }
+  :root[data-theme="light"] .mw-tag.down, :root[data-theme="light"] .mw-proj.down b { color: #B91C1C; }
+  @media (max-width: 380px) { .mw-v { font-size: 23px; } .mw-score { font-size: 22px; } .mw-tile { padding: 10px 8px; } }
+
+  /* ================= VT Fantasy look (sits on top of the shared styles) ================= */
+  :root {
+    --black: #130A0D; --surface: #211218; --surface2: #2C1820; --white: #FBF3EE; --muted: #C1ABB0; --line: #3A2128;
+    --royal: #8B1E3F; --violet: #F28C38; --lilac: #F7C6A0; --on-accent: #FFFFFF;
+    --display: "Archivo", "Arial Black", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  :root[data-theme="light"] {
+    --black: #FAF5F0; --surface: #FFFFFF; --surface2: #F4EAE3; --white: #22141A; --muted: #6A5960; --line: #E8DAD3;
+    --royal: #861F41; --violet: #C2560B; --lilac: #861F41;
+  }
+  body { font-size: 16px; line-height: 1.55; letter-spacing: .005em; }
+  .wrap { max-width: 860px; }
+  /* Header: a maroon banner */
+  header.mast { background: linear-gradient(135deg, #8B1E3F 0%, #5E1029 70%, #3E0A1B 100%); color: #fff; border-radius: 0 0 22px 22px;
+    margin: 0 -16px; padding: 18px 16px 14px; border-bottom: 3px solid #E5751F; }
+  .mast h1 { color: #fff; font-weight: 900; letter-spacing: -.01em; text-transform: none; }
+  .mast .sub, .mast .status, .mast #updated { color: rgba(255,255,255,.82) !important; }
+  .mast .crest { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+  .mast .week-nav, .mast .me-pick, .mast .theme-btn { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22) !important; color: #fff; }
+  .mast .week-nav button, .mast .week-nav .label, .mast .me-pick span, .mast .me-pick select, .mast .theme-btn { color: #fff !important; }
+  .mast .me-pick select option { color: #22141A; }
+  .mast .dot { background: #F28C38; }
+  /* Section headings with an orange marker */
+  h2 { font-family: var(--display); font-weight: 800; letter-spacing: -.015em; display: flex; align-items: center; gap: 10px; }
+  section > h2::before, section > .aw-pick > h2::before { content: ""; width: 6px; height: .9em; border-radius: 3px; background: var(--violet); flex: none; }
+  /* Filled cards instead of outlines */
+  .week-nav, .top4, .low, .pick, .mu, .med, .sb, .case .ct, .wkcard, .tcol, .pw, .hcard, .rw, .rc-card, .pie-card, .tr-card,
+  .t2, .aw-tile, .rb-i, .rw-card, .ph-row, .tier-board, .te-row, .me-card, .prof, .mw-tile, .mw-row {
+    border-color: transparent !important; background: var(--surface); border-radius: 16px; }
+  :root[data-theme="light"] .pick, :root[data-theme="light"] .sb, :root[data-theme="light"] .hcard, :root[data-theme="light"] .rw-card,
+  :root[data-theme="light"] .tr-card, :root[data-theme="light"] .pie-card, :root[data-theme="light"] .me-card, :root[data-theme="light"] .prof,
+  :root[data-theme="light"] .mw-tile, :root[data-theme="light"] .mw-row, :root[data-theme="light"] .tier-board, :root[data-theme="light"] .wkcard,
+  :root[data-theme="light"] .t2, :root[data-theme="light"] .rc-card, :root[data-theme="light"] .tcol, :root[data-theme="light"] .case .ct {
+    box-shadow: 0 1px 2px rgba(60,20,30,.06), 0 4px 14px rgba(60,20,30,.06); }
+  .mw-tile.accent { background: var(--royal) !important; }
+  .me-card { box-shadow: inset 0 0 0 2px var(--royal); }
+  .tr-side, .tchip, .te-pick button, .te-move button { border-color: var(--line); background: var(--surface2); }
+  /* Tables: roomier rows, soft zebra striping */
+  table { border-collapse: separate; border-spacing: 0; }
+  th { font-family: var(--body); font-weight: 800; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  td { border-bottom-color: var(--line); }
+  tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 55%, transparent); }
+  td.rank, .hrow .n, .mw-rank { color: var(--violet); }
+  /* Standings toggle and jump bar: segmented, orange when selected */
+  .toggle { background: var(--surface); border-color: transparent !important; padding: 4px; }
+  .toggle button[aria-pressed="true"] { background: var(--violet) !important; color: #1B0B10 !important; }
+  .toggle button[aria-pressed="true"] span { color: #1B0B10 !important; }
+  .jumpbar { background: var(--black); border-bottom: 0; padding-top: 12px; }
+  .jumpbar button { background: var(--surface); border-color: transparent; color: var(--white); font-weight: 700; }
+  .jumpbar button.on { background: var(--violet) !important; border-color: transparent !important; color: #1B0B10 !important; }
+  /* Bottom tab bar: maroon pill for the current tab */
+  .tabs button { font-family: var(--body); font-weight: 700; }
+  .tabs button[aria-selected="true"] { color: var(--white); }
+  @media (max-width: 640px) {
+    .tabs { background: var(--surface) !important; border-top: 0 !important; box-shadow: 0 -6px 20px rgba(0,0,0,.25); padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)); gap: 6px; }
+    .tabs button { border-top: 0 !important; border-radius: 14px; min-height: 48px; font-size: 14px; }
+    .tabs button[aria-selected="true"] { background: var(--royal); color: #fff !important; }
+    .tabs button[aria-selected="true"] span { color: #fff !important; }
+    header.mast { margin: 0 -16px; border-radius: 0 0 20px 20px; }
+  }
+  :root[data-theme="light"] .tabs { box-shadow: 0 -4px 16px rgba(60,20,30,.08); }
+  /* Buttons and links */
+  .tier-btn { background: var(--royal); } .tier-btn.ghost { background: transparent; }
+  details.explain > summary { color: var(--violet); }
+  .empty { color: var(--muted); }
+
+  .sm-only { display: none; }
+  @media (max-width: 640px) { .lg-only { display: none; } .sm-only { display: inline; } }
 </style>
 </head>
 <body>
@@ -1132,6 +1232,15 @@
   <div class="banner" id="banner" role="alert" hidden></div>
   <nav class="jumpbar" id="jumpbar" aria-label="Jump to a section" hidden></nav>
 
+  <div class="panel" id="panel-medianwatch" role="tabpanel" hidden>
+    <section aria-labelledby="mwH">
+      <h2 id="mwH">Median Watch</h2>
+      <details class="explain"><summary>Explain It</summary><p class="note">Every team this week against the median: the middle score in the league. Finish above it and you get a second win; below it, a second loss. "Now" uses current scores. "Projected" uses each team's projected final, built from ESPN's player projections adjusted by Vegas: each NFL team's implied point total (from the betting spread and over/under) raises or lowers its players' projections, and defenses move the other way. Players left counts starters whose games haven't finished, with the projected points they still have to add. It updates every minute during games.</p></details>
+      <div class="mw-stats" id="mwStats"></div>
+      <div class="mw-list" id="mwList"></div>
+    </section>
+  </div>
+
   <div class="panel" id="panel-scoreboard" role="tabpanel" aria-labelledby="tab-scoreboard">
     <section aria-labelledby="sbH">
       <h2 id="sbH">Scoreboard</h2>
@@ -1189,7 +1298,8 @@
         <button data-view="current" aria-pressed="true">Current</button>
         <button data-view="h2h" aria-pressed="false">H2H</button>
         <button data-view="median" aria-pressed="false">Median</button>
-        <button data-view="ifman" aria-pressed="false">IF man...</button>
+        <button data-view="ifman" aria-pressed="false">Best Case</button>
+        <button data-view="allplay" aria-pressed="false">All-play</button>
         <button data-view="luck" aria-pressed="false">Luck</button>
       </div>
       <details class="explain"><summary>Explain It</summary><p class="note" id="standNote"></p></details>
@@ -1197,7 +1307,7 @@
       <div id="cutLegend"></div>
     </section>
     <section aria-labelledby="pieH">
-      <h2 id="pieH">Where the points come from</h2>
+      <h2 id="pieH">Point Distribution</h2>
       <details class="explain"><summary>Explain It</summary><p class="note">Each manager's starting-lineup points this season by position, over finished weeks. Flex players count at their real position.</p></details>
       <div class="pies" id="pies"></div>
     </section>
@@ -1210,7 +1320,7 @@
   <div class="panel" id="panel-hof" role="tabpanel" aria-labelledby="tab-hof" hidden>
     <section aria-labelledby="hofH">
       <div class="aw-pick"><h2 id="hofH">Hall of Fame</h2><label class="me-pick"><span>Show</span><select id="hofYear" aria-label="All time, an era, or one season"></select></label></div>
-      <details class="explain"><summary>Explain It</summary><p class="note">League records across every season on record. Scores, weeks, and streaks count regular-season games. Streaks follow a manager across seasons. Median streaks start in 2023, when the league added the median game. Season lists rank finished seasons by median points per game (the middle weekly score), so one huge or tiny week doesn't swing a season. Luck lists use finished seasons; luck is actual head-to-head wins minus the wins a team's scores earned against the whole league each week. Accuracy lists use finished seasons with weekly lineup data (at least 6 weeks). Player performances use your league's scoring and include bench players, marked as benched. The dropdown switches every list between all time and single seasons.</p></details>
+      <details class="explain"><summary>Explain It</summary><p class="note">League records across every season on record. Scores, weeks, and streaks count regular-season games. Streaks follow a manager across seasons. Median streaks start in 2023, when the league added the median game. Season lists rank finished seasons by median points per game (the middle weekly score), so one huge or tiny week doesn't swing a season. Luck lists use finished seasons; luck is schedule luck (actual head-to-head wins minus the wins a team's scores earned against the whole league each week) plus injury luck (wins lost to injured starters, compared with the league average). Accuracy lists use finished seasons with weekly lineup data (at least 6 weeks). Player performances use your league's scoring and include bench players, marked as benched. The dropdown switches every list between all time and single seasons.</p></details>
       <div class="hof" id="hof"></div>
     </section>
   </div>
@@ -1245,7 +1355,7 @@
   <div class="panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history" hidden>
     <section aria-labelledby="profH">
       <h2 id="profH">Manager Profiles</h2>
-      <details class="explain"><summary>Explain It</summary><p class="note">Every manager who has played in the league, current and former, across every season ESPN has on record. Weeks and head-to-head records count regular-season games. Cakewalk is the manager they beat most often, Their Daddy is the one who owns them, and Rival is their closest head-to-head series. For current managers, all three are other current managers. Favorite player: the player on this manager's roster for the most weeks; ties go to the one with more starting points in their wins. Luck index: actual head-to-head wins minus the wins your scores earned against the whole league each week (the all-play record). Positive means the schedule has helped, negative means it has hurt. Bad beats are losses while scoring above that week's median; lucky wins are wins while scoring below it.</p></details>
+      <details class="explain"><summary>Explain It</summary><p class="note">Every manager who has played in the league, current and former, across every season ESPN has on record. Weeks and head-to-head records count regular-season games. Cakewalk is the manager they beat most often, Their Daddy is the one who owns them, and Rival is their closest head-to-head series. For current managers, all three are other current managers. Favorite player: the player on this manager's roster for the most weeks; ties go to the one with more starting points in their wins. Luck index: schedule luck (actual head-to-head wins minus the wins your scores earned against the whole league each week) plus injury luck (wins your injured starters cost you compared with the league average, from NFL snap counts and injury reports). Positive means luck has helped, negative means it has hurt. Bad beats are losses while scoring above that week's median; lucky wins are wins while scoring below it.</p></details>
       <div class="hist-controls">
         <label class="me-pick"><span>Manager</span><select id="histManager" aria-label="Choose a manager"></select></label>
         <label class="me-pick"><span>Records</span><select id="histYear" aria-label="Choose all time or one season"></select></label>
@@ -1326,12 +1436,14 @@
     powerAuthor: "",        // whose posts count as power rankings ("" = anyone's titled "Power Rankings ... Week N")
     tierEditors: ["noah", "sean"], // first names who can edit their own tier list (password protected)
     powerRankings: false,   // no Power Rankings section in this league
+    medianWatch: true,      // Live tab = Median Watch + Scoreboard (no Food Chain / The Sharks: no top-4 or last-place stakes)
   };
   const POS = { 1: "QB", 2: "RB", 3: "WR", 4: "TE", 5: "K", 16: "D/ST" };
   // Top-level tabs. Live, The Week, and Library each hold several sections with a jump bar.
   const TABS = ["live", "week", "social", "library"];
   const GROUPS = {
-    live: [["pecking", "Food Chain"], ["scoreboard", "Scoreboard"], ...(CFG.weeklyPot ? [["pot", "Weekly Pot"]] : []), ["sharks", "The Sharks"]],
+    live: CFG.medianWatch ? [["medianwatch", "Median Watch"], ["scoreboard", "Scoreboard"]]
+      : [["pecking", "Food Chain"], ["scoreboard", "Scoreboard"], ...(CFG.weeklyPot ? [["pot", "Weekly Pot"]] : []), ["sharks", "The Sharks"]],
     week: [["standings", "Standings"], ["story", "Story"], ["awards", "Awards"], ["moves", "Transactions"], ["waivers", "Waivers"]],
     social: [["pickem", "Pick 'em"], ...CFG.tierEditors.map((w) => [`tiers${w}`, `${w.charAt(0).toUpperCase() + w.slice(1)}'s Tier List`]), ...(CFG.powerRankings ? [["power", "Power Rankings"]] : [])],
     library: [["history", "Manager Profiles"], ["seasons", "Final Standings"], ["hof", "Hall of Fame"], ["draft", "Draft"], ["trades", "Trade Review"]],
@@ -1343,7 +1455,7 @@
   const state = {
     league: null, week: null, currentWeek: null, lastWeek: null, tab: "scoreboard",
     wk: null, picks: null, pickErr: {}, players: null, timer: null, view: "current", ifman: null, ifmanErr: null, medFrac: 0,
-    sorts: {}, story: {}, storyWeek: null, histLoading: null, hofPlayers: {}, hofYear: "all", power: null, powerErr: null, powerIdx: null, rosters: {}, tierData: null, tierErr: null, tierView: null, tierEditing: false, tierDraft: null, trades: {}, tradeYear: null, recap: null, recapErr: null, recapWeek: null, txstats: null, txstatsErr: null, ifmanLoading: null, drafts: {}, draftYear: null, draftView: null, draftRound: null, draftMgr: "", hist: null, histErr: null, histIfman: {}, histFav: {}, histManager: null, histYear: "all", histSeason: null,
+    sorts: {}, injury: {}, injuryLoading: {}, story: {}, storyWeek: null, histLoading: null, hofPlayers: {}, hofYear: "all", power: null, powerErr: null, powerIdx: null, rosters: {}, tierData: null, tierErr: null, tierView: null, tierEditing: false, tierDraft: null, trades: {}, tradeYear: null, recap: null, recapErr: null, recapWeek: null, txstats: null, txstatsErr: null, ifmanLoading: null, drafts: {}, draftYear: null, draftView: null, draftRound: null, draftMgr: "", hist: null, histErr: null, histIfman: {}, histFav: {}, histManager: null, histYear: "all", histSeason: null,
     awards: null, awardsErr: null, awardsLoading: null, awardsPersonal: false, awardWeek: null, animated: new Set(),
     me: (() => { try { return Number(localStorage.getItem("boc-me")) || null; } catch { return null; } })(),
   };
@@ -1476,6 +1588,44 @@
     return { left: st.length, playing: st.filter((p) => p.game.state === "in").length, pts: st.reduce((a, p) => a + (p.remaining || 0), 0) };
   }
   const leftText = (l, short) => l.left ? `${l.left} left${!short && l.playing ? ` (${l.playing} live)` : ""}, ${l.pts.toFixed(1)} proj` : "All done";
+  // ---------- Median Watch (Live tab) ----------
+  function renderMedianWatch() {
+    const stats = $("mwStats"), list = $("mwList"); if (!stats) return;
+    if (!state.wk) { list.innerHTML = `<div class="empty">Loading this week…</div>`; return; }
+    const sides = wkSides().map((s) => ({ s, t: teamById(s.teamId), left: leftFor(s) }));
+    if (!sides.length) { list.innerHTML = `<div class="empty">No games this week.</div>`; return; }
+    const curMed = state.wk.medians?.current ?? median(sides.map((x) => x.s.current));
+    const projMed = state.wk.medians?.projected ?? median(sides.map((x) => x.s.projected));
+    const started = sides.some((x) => x.s.current > 0);
+    const above = sides.filter((x) => x.s.current > curMed).length, projAbove = sides.filter((x) => x.s.projected > projMed);
+    const totLeft = sides.reduce((a, x) => a + x.left.left, 0);
+    stats.innerHTML = `
+      <div class="mw-tile"><div class="mw-k">Current median</div><div class="mw-v">${started ? fmt(curMed) : "–"}</div><div class="mw-s">${started ? `${above} of ${sides.length} teams above` : "No points yet"}</div></div>
+      <div class="mw-tile accent"><div class="mw-k">Projected median</div><div class="mw-v">${fmt(projMed)}</div><div class="mw-s">Vegas-adjusted finals</div></div>
+      <div class="mw-tile"><div class="mw-k">Players left</div><div class="mw-v">${totLeft}</div><div class="mw-s">across the league</div></div>`;
+    // Sorted by current score once games start (projected before kickoff)
+    const key = (x) => (started ? x.s.current : x.s.projected);
+    const rows = [...sides].sort((a, b) => key(b) - key(a) || b.s.projected - a.s.projected);
+    const line = started ? curMed : projMed;
+    let html = "", drawn = false;
+    rows.forEach((x, i) => {
+      if (!drawn && key(x) <= line) { html += `<div class="mw-line"><span>${started ? "Current" : "Projected"} median ${fmt(line)}</span></div>`; drawn = true; }
+      const nowUp = x.s.current > curMed, projUp = x.s.projected > projMed;
+      const gap = x.s.projected - projMed;
+      html += `<div class="mw-row ${x.t?.id === state.me ? "me" : ""} ${started ? (nowUp ? "up" : "down") : (projUp ? "up" : "down")}">
+        <div class="mw-rank">${i + 1}</div>
+        <div class="mw-team">${logo(x.t)}<div class="mw-who"><div class="mw-name">${esc(teamName(x.t))}</div><div class="mw-mgr">${esc(mgr(x.s.teamId))}</div></div></div>
+        <div class="mw-now"><div class="mw-score">${started ? fmt(x.s.current) : "–"}</div><div class="mw-tag ${started ? (nowUp ? "up" : "down") : ""}">${started ? (nowUp ? "Above" : "Below") : "Not started"}</div></div>
+        <div class="mw-detail">
+          <span class="mw-proj ${projUp ? "up" : "down"}">Proj ${fmt(x.s.projected)} <b>${gap >= 0 ? "+" : ""}${fmt(gap)}</b></span>
+          <span class="mw-left">${x.left.left ? `${x.left.left} left${x.left.playing ? ` (${x.left.playing} live)` : ""} · ${x.left.pts.toFixed(1)} pts` : "All done"}</span>
+        </div>
+      </div>`;
+    });
+    if (!drawn) html += `<div class="mw-line"><span>${started ? "Current" : "Projected"} median ${fmt(line)}</span></div>`;
+    list.innerHTML = html;
+  }
+
   function placeMedian() {
     const track = document.querySelector("#board .track"), line = $("mline");
     if (!track || !line) return;
@@ -1673,7 +1823,7 @@
     return state.league.teams.map((t) => { const o = t.record?.overall || {}; return { t, r: { w: o.wins || 0, l: o.losses || 0, t: o.ties || 0 }, pf: o.pointsFor || 0, pa: o.pointsAgainst || 0, seed: t.playoffSeed || 99 }; })
       .sort((a, b) => a.seed - b.seed || winPct(b.r) - winPct(a.r) || b.pf - a.pf);
   }
-  const LUCK_EXPLAIN_SHORT = "Luck = actual head-to-head wins minus the wins your scores earned against the whole league each week (your all-play record). Positive means the schedule has helped; negative means it has hurt. Bad beats: losses while scoring above the median. Lucky wins: wins while scoring below it.";
+  const LUCK_EXPLAIN_SHORT = "Luck = schedule luck + injury luck, both counted in wins. Schedule: actual head-to-head wins minus the wins your scores earned against the whole league each week (your all-play record). Injuries: wins your injured starters cost you (games they missed or left early, from NFL snap counts and injury reports), compared with the league average, so staying healthier than average counts as lucky. Bad beats / lucky wins: losses above the median / wins below it.";
   async function renderPies() {
     const box = $("pies"); if (!box) return;
     if (!state.recap && !state.recapErr) {
@@ -1691,8 +1841,9 @@
     current: "Official standings as ESPN has them, in playoff-seed order.",
     h2h: "H2H: records from head-to-head matchups only.",
     median: "One game per completed week against the league median: a win for finishing above it, a loss for finishing below.",
-    ifman: "IF man...: what the standings would be if every team had started its best possible lineup every week, against opponents who did the same.",
+    ifman: "Best Case: what the standings would be if every team had started its best possible lineup every week, against opponents who did the same.",
     luck: LUCK_EXPLAIN_SHORT,
+    allplay: "All-play: your record if you'd played every team every week. Each week you get a win for every team you outscored and a loss for every team that outscored you, so it rewards scoring, not the schedule. H2H is your actual head-to-head record for comparison.",
     accuracy: "Season-long start accuracy: points scored out of the best lineup each team could have started, over every finished week. Perfect weeks are weeks with nothing better left on the bench.",
   };
   // Dashed lines: under the regular-season winner (rank 1) and under the last playoff spot.
@@ -1709,7 +1860,7 @@
       tr.after(lab);
     });
   }
-  async function renderStandings() { await renderStandingsTable(); renderPies(); makeSortable($("standings"), `standings:${state.view}`); const srt = state.sorts[`standings:${state.view}`]; if (srt && !(srt.col === 0 && srt.dir === 1)) return; if (state.view !== "accuracy" && state.view !== "luck") labelCuts(); else $("standings").querySelectorAll("tr.cut-first, tr.cut-playoff").forEach((tr) => tr.classList.remove("cut-first", "cut-playoff")); }
+  async function renderStandings() { await renderStandingsTable(); renderPies(); makeSortable($("standings"), `standings:${state.view}`); const srt = state.sorts[`standings:${state.view}`]; if (srt && !(srt.col === 0 && srt.dir === 1)) return; if (state.view !== "accuracy" && state.view !== "luck" && state.view !== "allplay") labelCuts(); else $("standings").querySelectorAll("tr.cut-first, tr.cut-playoff").forEach((tr) => tr.classList.remove("cut-first", "cut-playoff")); }
   async function renderStandingsTable() {
     const L = state.league; if (!L) return;
     const v = state.view, table = $("standings");
@@ -1730,7 +1881,7 @@
       const med = medianRecords();
       const rows = L.teams.map((t) => ({ t, r: med[t.id] })).sort((a, b) => winPct(b.r) - winPct(a.r) || b.r.pf - a.r.pf);
       table.innerHTML = `<thead><tr><th>#</th><th>Team</th><th>Median record</th><th>Points for</th></tr></thead><tbody>${rows.map((x, i) => `<tr class="${x.t.id === state.me ? "me" : ""} ${cutClass(i)}"><td class="rank">${i + 1}</td>${teamCell(x.t)}<td class="strong">${recStr(x.r)}</td><td>${fmtTot(x.r.pf)}</td></tr>`).join("")}</tbody>`;
-    } else if (v === "luck") {
+    } else if (v === "allplay") {
       const wk = {};
       for (const g of L.schedule || []) {
         if (g.matchupPeriodId > regCount() || !decided(g) || !g.away) continue;
@@ -1738,10 +1889,25 @@
         (wk[g.matchupPeriodId] ||= []).push({ teamId: g.home.teamId, pts: g.home.totalPoints || 0, r: r[0] }, { teamId: g.away.teamId, pts: g.away.totalPoints || 0, r: r[1] });
       }
       const lk = luckFromWeeks(wk);
+      const pctOf = (x) => (x.apW + x.apT / 2) / Math.max(1, x.apW + x.apL + x.apT);
+      const rows = L.teams.map((t) => ({ t, x: lk[t.id] })).filter((r) => r.x).sort((a, b) => pctOf(b.x) - pctOf(a.x));
+      if (!rows.length) { table.innerHTML = `<tbody><tr><td class="empty" style="text-align:left">Fills in after the first week is final.</td></tr></tbody>`; return; }
+      table.innerHTML = `<thead><tr><th>#</th><th>Team</th><th>All-play</th><th>Win %</th><th>H2H</th></tr></thead><tbody>${rows.map(({ t, x }, i) => `
+        <tr class="${t.id === state.me ? "me" : ""}"><td class="rank">${i + 1}</td>${teamCell(t)}<td class="strong">${recStr({ w: x.apW, l: x.apL, t: x.apT })}</td><td>${(pctOf(x) * 100).toFixed(1)}%</td><td>${recStr({ w: x.w, l: x.l, t: x.t })}</td></tr>`).join("")}</tbody>`;
+    } else if (v === "luck") {
+      const wk = {};
+      for (const g of L.schedule || []) {
+        if (g.matchupPeriodId > regCount() || !decided(g) || !g.away) continue;
+        const r = g.winner === "HOME" ? ["W", "L"] : g.winner === "AWAY" ? ["L", "W"] : ["T", "T"];
+        (wk[g.matchupPeriodId] ||= []).push({ teamId: g.home.teamId, pts: g.home.totalPoints || 0, r: r[0] }, { teamId: g.away.teamId, pts: g.away.totalPoints || 0, r: r[1] });
+      }
+      const cy = Number(L.seasonId) || Number(state.league?.seasonId);
+      ensureInjury([cy], () => { if (state.view === "luck") renderStandings(); });
+      const lk = withInjury(cy, luckFromWeeks(wk));
       const rows = L.teams.map((t) => ({ t, x: lk[t.id] })).filter((r) => r.x).sort((a, b) => b.x.luck - a.x.luck);
       if (!rows.length) { table.innerHTML = `<tbody><tr><td class="empty" style="text-align:left">Fills in after the first week is final.</td></tr></tbody>`; return; }
-      table.innerHTML = `<thead><tr><th>#</th><th>Team</th><th>Luck</th><th class="hide-m">All-play</th><th>Bad beats</th><th>Lucky wins</th></tr></thead><tbody>${rows.map(({ t, x }, i) => `
-        <tr class="${t.id === state.me ? "me" : ""}"><td class="rank">${i + 1}</td>${teamCell(t)}<td class="strong ${x.luck > 0.05 ? "up" : x.luck < -0.05 ? "down" : ""}">${luckText(x.luck)}</td><td class="hide-m">${recStr({ w: x.apW, l: x.apL, t: x.apT })}</td><td>${x.badBeats}</td><td>${x.luckyWins}</td></tr>`).join("")}</tbody>`;
+      table.innerHTML = `<thead><tr><th>#</th><th>Team</th><th>Luck</th><th>Sched.</th><th>Injury</th><th><span class="lg-only">Bad beats / lucky wins</span><span class="sm-only" title="Bad beats / lucky wins">BB / LW</span></th></tr></thead><tbody>${rows.map(({ t, x }, i) => `
+        <tr class="${t.id === state.me ? "me" : ""}"><td class="rank">${i + 1}</td>${teamCell(t)}<td class="strong ${x.luck > 0.05 ? "up" : x.luck < -0.05 ? "down" : ""}">${luckText(x.luck)}</td><td>${luckText(x.sched)}</td><td>${x.injKnown ? luckText(x.inj) : "…"}</td><td>${x.badBeats} / ${x.luckyWins}</td></tr>`).join("")}</tbody>`;
     } else if (v === "accuracy") {
       if (!state.ifman && !state.ifmanErr) {
         table.innerHTML = `<tbody><tr><td class="empty" style="text-align:left">Working out every lineup…</td></tr></tbody>`;
@@ -2067,8 +2233,32 @@
     for (const t of season.teams) for (const g of t.games || []) (wk[g.w] ||= []).push({ teamId: t.teamId, pts: g.pts, r: g.r });
     return wk;
   };
+  // Injury luck per season (from the server: public NFL snap counts + injury reports), loaded in the background.
+  const injuryLuck = (year, teamId) => { const I = state.injury[year]; return I?.available ? (I.teams?.[teamId]?.luck ?? 0) : null; };
+  async function loadInjury(year) {
+    if (state.injury[year]?.complete) return state.injury[year];
+    for (let i = 0; i < 8; i++) {
+      try { const r = await getJSON(`/api/history?part=injury&season=${year}`); state.injury[year] = r; if (r.complete) return r; }
+      catch { state.injury[year] = { complete: true, available: false, teams: {} }; return state.injury[year]; }
+    }
+    return state.injury[year];
+  }
+  // Load any missing seasons, then call after() once (returns true if it started loading).
+  function ensureInjury(years, after) {
+    const miss = [...new Set(years)].filter((y) => !state.injury[y]?.complete && !state.injuryLoading[y]);
+    if (!miss.length) return false;
+    miss.forEach((y) => (state.injuryLoading[y] = true));
+    (async () => { for (const y of miss) { await loadInjury(y); delete state.injuryLoading[y]; } after(); })();
+    return true;
+  }
+  // Season luck = schedule luck + injury luck, keeping both parts (sched, inj).
+  function withInjury(year, lk) {
+    for (const [tid, x] of Object.entries(lk)) { const inj = injuryLuck(year, Number(tid)); x.sched = x.luck; x.inj = inj ?? 0; x.injKnown = inj != null; x.luck = Math.round((x.sched + x.inj) * 100) / 100; }
+    return lk;
+  }
+  const seasonLuck = (season) => withInjury(season.year, luckFromWeeks(seasonWeeksMap(season)));
   const luckText = (x) => `${x > 0 ? "+" : ""}${x.toFixed(1)}`;
-  const LUCK_EXPLAIN = "Luck compares your head-to-head record with your all-play record, meaning your record if you'd played every team every week. Each week your score is ranked against the whole league: beating 9 of 11 teams means you'd win about 82% of the time. Adding that up gives your expected wins. Luck is actual wins minus expected wins. +2.0 means you've won two more games than your scores earned; -2.0 means the schedule has cost you two. Bad beats are losses while scoring above that week's median, and lucky wins are wins while scoring below it.";
+  const LUCK_EXPLAIN = "Luck adds two things, both in wins. Schedule luck: your head-to-head wins minus your expected wins from the all-play record (your record if you'd played every team every week). Injury luck: for each week, the points your starters lost to injuries (missed games, or leaving a game early) are added back and the all-play is re-run; the wins those points would have bought are your injury cost, compared with the league average. +2.0 means two more wins than your scores and health deserved; -2.0 means two fewer.";
 
   // Position pies
   const POS_COLORS = { QB: "#F08A3E", RB: "#22C55E", WR: "#38BDF8", TE: "#F59E0B", "D/ST": "#94A3B8", K: "#F472B6" };
@@ -2085,7 +2275,7 @@
       paths += v / tot >= 0.9999 ? `<circle cx="${c}" cy="${c}" r="${r}" fill="${POS_COLORS[k]}"/>` : `<path d="M${c},${c} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${large} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${POS_COLORS[k]}"/>`;
       ang = a2;
     }
-    return `<svg class="pie" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Points by position">${paths}<circle cx="${c}" cy="${c}" r="${r * 0.42}" fill="var(--black)"/></svg>`;
+    return `<svg class="pie" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Point Distribution">${paths}<circle cx="${c}" cy="${c}" r="${r * 0.42}" fill="var(--black)"/></svg>`;
   }
   function pieLegend(parts) {
     const tot = POS_ORDER.reduce((a, k) => a + (parts[k] || 0), 0);
@@ -2164,6 +2354,7 @@
     // Load best-lineup records for this manager's seasons, then redraw.
     const need = M.seasons.map((x) => x.season.year).filter((y) => !state.histIfman[y]?.complete);
     for (const y of need) { await loadIfman(y); if (state.histManager === M.id) renderProfile(M); }
+    ensureInjury(M.seasons.map((x) => x.season.year), () => { if (state.histManager === M.id) renderProfile(M); });
     const needFav = M.seasons.map((x) => x.season.year).filter((y) => !state.histFav[y]?.complete);
     for (const y of needFav) { await loadFav(y); if (state.histManager === M.id) renderProfile(M); }
   }
@@ -2249,22 +2440,22 @@
     const favHtml = fav ? esc(fav.name) : favPending ? "…" : "–";
     const favSub = fav ? `${fav.pos ? `${esc(fav.pos)}, ` : ""}${fav.weeks} weeks on the roster${fav.seasons > 1 ? ` across ${fav.seasons} seasons` : ""}` : "";
     // Luck over the chosen span, with a league rank
-    const lk = { w: 0, l: 0, t: 0, apW: 0, apL: 0, apT: 0, expected: 0, luck: 0, badBeats: 0, luckyWins: 0 };
-    for (const { season, team } of pick) { const x = luckFromWeeks(seasonWeeksMap(season))[team.teamId]; if (!x) continue; for (const k of Object.keys(lk)) lk[k] += x[k] || 0; }
+    const lk = { w: 0, l: 0, t: 0, apW: 0, apL: 0, apT: 0, expected: 0, luck: 0, sched: 0, inj: 0, badBeats: 0, luckyWins: 0 };
+    for (const { season, team } of pick) { const x = seasonLuck(season)[team.teamId]; if (!x) continue; for (const k of Object.keys(lk)) lk[k] += x[k] || 0; }
     const hasLuck = lk.w + lk.l + lk.t > 0;
     const luckRank = (() => {
       if (!hasLuck) return "";
-      const all = managers().map((m) => { let v = 0, n = 0; for (const x of m.seasons) { if (!inScope(state.histYear, x.season.year)) continue; const r = luckFromWeeks(seasonWeeksMap(x.season))[x.team.teamId]; if (r) { v += r.luck; n++; } } return n ? { id: m.id, v } : null; }).filter(Boolean);
+      const all = managers().map((m) => { let v = 0, n = 0; for (const x of m.seasons) { if (!inScope(state.histYear, x.season.year)) continue; const r = seasonLuck(x.season)[x.team.teamId]; if (r) { v += r.luck; n++; } } return n ? { id: m.id, v } : null; }).filter(Boolean);
       const pos = all.filter((x) => x.v > lk.luck + 1e-9).length + 1;
       return `${pos === 1 ? "Luckiest" : pos === all.length ? "Unluckiest" : `${ordinal(pos)} luckiest`} of ${all.length}`;
     })();
     // Points by position (seasons with weekly lineup data)
     const posParts = {};
     for (const { season, team } of pick) { const P = state.histIfman[season.year]?.positions?.[team.teamId]; if (P) for (const [k, v] of Object.entries(P)) posParts[k] = (posParts[k] || 0) + v; }
-    const pieHtml = Object.keys(posParts).length ? `<div class="prof-pie"><div><div class="k" style="color:var(--muted);font-size:12.5px">Points by position</div>${pieLegend(posParts)}</div>${pieSvg(posParts, 92)}</div>` : "";
+    const pieHtml = Object.keys(posParts).length ? `<div class="prof-pie"><div><div class="k" style="color:var(--muted);font-size:12.5px">Point Distribution</div>${pieLegend(posParts)}</div>${pieSvg(posParts, 92)}</div>` : "";
     const extras = `
       <div class="prof-more">
-        <div><div class="v ${lk.luck > 0.05 ? "up" : lk.luck < -0.05 ? "down" : ""}">${hasLuck ? luckText(lk.luck) : "–"}</div><div class="k">Luck index</div><div class="d">${hasLuck ? luckRank : ""}</div></div>
+        <div><div class="v ${lk.luck > 0.05 ? "up" : lk.luck < -0.05 ? "down" : ""}">${hasLuck ? luckText(lk.luck) : "–"}</div><div class="k">Luck index</div><div class="d">${hasLuck ? `${luckRank}. Schedule ${luckText(lk.sched)}, injuries ${luckText(lk.inj)}` : ""}</div></div>
         <div><div class="v">${hasLuck ? recStr({ w: lk.apW, l: lk.apL, t: lk.apT }) : "–"}</div><div class="k">All-play record</div><div class="d">${hasLuck ? `${((lk.apW + lk.apT / 2) / Math.max(1, lk.apW + lk.apL + lk.apT) * 100).toFixed(1)}% vs. the whole league each week` : ""}</div></div>
         <div><div class="v">${hasLuck ? `${lk.badBeats} / ${lk.luckyWins}` : "–"}</div><div class="k">Bad beats / lucky wins</div><div class="d">${hasLuck ? "Losses above the median / wins below it" : ""}</div></div>
         <div><div class="v">${myAcc == null ? (ifPending ? "…" : "–") : `${(myAcc * 100).toFixed(1)}%`}</div><div class="k">Start accuracy</div><div class="d">${myAcc == null ? "" : `${accRank} in the league, ${accPerfect} perfect week${accPerfect === 1 ? "" : "s"}`}</div></div>
@@ -2283,8 +2474,8 @@
     const teamsBy = [...pick].sort((a, b) => b.season.year - a.season.year).map((x) => `<button class="team-link" data-roster="${x.season.year}:${x.team.teamId}">${x.season.year}: ${esc(x.team.teamName)}${x.season.complete && x.team.finalRank ? ` (${ordinal(x.team.finalRank)})` : x.season.complete ? "" : " (in progress)"}</button>`).join("");
     const ifText = ifPending && !ifSeasons ? "…" : ifSeasons ? recStr(ifm) : "–";
     let foot = [];
-    if (ifPending) foot.push("If man is still being worked out for some seasons.");
-    if (ifMissing) foot.push(`If man isn't available for ${ifMissing} season${ifMissing === 1 ? "" : "s"}, because ESPN didn't keep lineups that far back.`);
+    if (ifPending) foot.push("Best Case is still being worked out for some seasons.");
+    if (ifMissing) foot.push(`Best Case isn't available for ${ifMissing} season${ifMissing === 1 ? "" : "s"}, because ESPN didn't keep lineups that far back.`);
     if (typeof state.histYear !== "number" && !finishes.length) foot.push("Average finish starts counting after a full season.");
     if (!pick.length) foot.push(`${esc(M.name)} didn't play in the ${scopeLabel(state.histYear)}.`);
     $("profile").innerHTML = `<div class="prof">
@@ -2300,7 +2491,7 @@
         <div><div class="v">${recStr(off)}</div><div class="k">Official record</div></div>
         <div><div class="v">${recStr(h2h)}</div><div class="k">H2H</div></div>
         <div><div class="v">${recStr(med)}</div><div class="k">Median</div></div>
-        <div><div class="v">${ifText}</div><div class="k">IF man...</div></div>
+        <div><div class="v">${ifText}</div><div class="k">Best Case</div></div>
       </div>
       ${extras}
       <div class="prof-teams">${teamsBy}</div>
@@ -2471,7 +2662,7 @@
     $("drSeason").innerHTML = years.map((y) => `<option value="${y}" ${y === state.draftYear ? "selected" : ""}>${y}</option>`).join("");
     const y = state.draftYear;
     if (!state.drafts[y]) {
-      $("draftTop").innerHTML = `<div class="empty">Pulling the ${y} draft and working out half-PPR finishes…</div>`; $("draftTable").innerHTML = ""; $("drRound").innerHTML = ""; $("drMgr").innerHTML = "";
+      $("draftTop").innerHTML = `<div class="empty">Pulling the ${y} draft and working out full-PPR finishes…</div>`; $("draftTable").innerHTML = ""; $("drRound").innerHTML = ""; $("drMgr").innerHTML = "";
       try { state.drafts[y] = await getJSON(`/api/draft?season=${y}`); } catch (e) { state.drafts[y] = { available: false, reason: e.message }; }
       if (state.draftYear !== y) return;
     }
@@ -2480,11 +2671,13 @@
     const byPick = Object.fromEntries(D.picks.map((p) => [p.overall, p]));
     const who = (p) => { const t = D.teams[p.teamId] || {}; const a = assignedTo(y, t.name); return fixName((a ? a.split(" ")[0] : t.manager) || t.name || ""); };
     const where = (p) => D.auction ? `$${p.bid}` : `${p.round}.${String(p.roundPick).padStart(2, "0")}`;
-    const story = (p) => `Drafted ${p.pos}${p.posDraftRank} (${where(p)}), ${D.complete ? "finished" : "now"} ${p.pos}${p.posPpgRank} in points per game (${fmt(p.ppg)})`;
+    const story = (p) => p.posPpgRank == null || p.tagNote
+      ? `Drafted ${p.pos}${p.posDraftRank} (${where(p)}), played ${p.gp} game${p.gp === 1 ? "" : "s"} and averaged ${fmt(p.ppg)}: a ${p.pos}${p.healthyPpgRank} pace`
+      : `Drafted ${p.pos}${p.posDraftRank} (${where(p)}), ${D.complete ? "finished" : "now"} ${p.pos}${p.posPpgRank} in points per game (${fmt(p.ppg)})`;
     const card = (title, cls, list) => `<div class="tcol ${cls}"><h3><span class="arrow">${cls === "up" ? "▲" : "▼"}</span>${title}</h3>${list.length ? list.map((o) => { const p = byPick[o]; return `<div class="ti"><div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="why">${esc(who(p))}. ${esc(story(p))}</div></div></div>`; }).join("") : `<div class="why" style="color:var(--muted)">None.</div>`}</div>`;
     $("draftTop").innerHTML = !D.statsAvailable ? `<div class="empty">Couldn't find season stats for ${y}, so steals and busts can't be worked out.</div>` :
       `<div class="trends">${card(D.complete ? "Biggest steals" : "Steals so far", "up", D.steals)}${card(D.complete ? "Biggest busts" : "Busts so far", "down", D.busts)}</div>`;
-    $("drNote").textContent = `${D.auction ? "Auction" : "Snake"} draft, ${D.rounds} rounds. Everything is judged by half-PPR points per game${D.complete ? ` (minimum ${D.minGames} games), so injuries don't sink a player's rank` : ` so far (minimum ${D.minGames} game${D.minGames === 1 ? "" : "s"})`}, ranked against ${D.rankScope === "all" ? "every player at the position, drafted or not" : "drafted players at the position"}. Steals and busts compare where a player went at his position in this draft with his PPG rank${D.complete ? "" : ""}. Keepers get a yellow Keeper tag instead of steal or bust, and a player who missed a big part of the season isn't called a bust. Kickers and defenses are left out. Tap a player for his draft history in the league.`;
+    $("drNote").textContent = `${D.auction ? "Auction" : "Snake"} draft, ${D.rounds} rounds. Everything is judged by full-PPR points per game${D.complete ? ` (minimum ${D.minGames} games), so injuries don't sink a player's rank` : ` so far (minimum ${D.minGames} game${D.minGames === 1 ? "" : "s"})`}, ranked against ${D.rankScope === "all" ? "every player at the position, drafted or not" : "drafted players at the position"}. Steals and busts compare where a player went at his position in this draft with his PPG rank${D.complete ? "" : ""}. Keepers get a yellow Keeper tag instead of steal or bust, and a player who missed a big part of the season is judged on his points per game in the games he played, so he's only a bust if that pace was. Kickers and defenses are left out. Tap a player for his draft history in the league.`;
     // Board: by round or by manager
     const mgrs = [...new Set(Object.keys(D.teams).map((id) => who({ teamId: Number(id) })).filter(Boolean))].sort();
     if (state.draftRound == null) state.draftRound = "1";
@@ -2659,10 +2852,11 @@
     const luckRows = [];
     for (const season of state.hist.seasons) {
       if (!season.complete || !inYear({ year: season.year })) continue;
-      const lk = luckFromWeeks(seasonWeeksMap(season));
+      const lk = seasonLuck(season);
       for (const t of season.teams) { const x = lk[t.teamId]; if (!x || !x.games) continue; const who = identity(season, t); luckRows.push({ ...x, year: season.year, key: who.key, name: fixName(who.name), teamName: t.teamName }); }
     }
-    const luckRow = (x, i) => `<div class="hrow ${x.key === me ? "me" : ""}"><span class="n">${i + 1}</span>${face(x.name)}<div class="who"><div class="nm">${esc(x.name)}</div><div class="sub">${x.year}, ${recStr(x)} but all-play ${recStr({ w: x.apW, l: x.apL, t: x.apT })}</div></div><span class="val">${luckText(x.luck)}</span></div>`;
+    ensureInjury(state.hist.seasons.filter((x) => x.complete && inYear({ year: x.year })).map((x) => x.year), () => { if (isOn("hof")) renderHof(); });
+    const luckRow = (x, i) => `<div class="hrow ${x.key === me ? "me" : ""}"><span class="n">${i + 1}</span>${face(x.name)}<div class="who"><div class="nm">${esc(x.name)}</div><div class="sub">${x.year}, schedule ${luckText(x.sched)}, injuries ${x.injKnown ? luckText(x.inj) : "–"}</div></div><span class="val">${luckText(x.luck)}</span></div>`;
     const beatRow = (x, i) => `<div class="hrow ${x.key === me ? "me" : ""}"><span class="n">${i + 1}</span>${face(x.name)}<div class="who"><div class="nm">${esc(x.name)}</div><div class="sub">${x.year}, ${recStr(x)}</div></div><span class="val">${x.badBeats}</span></div>`;
     html += hofList(`Luckiest seasons, ${L}`, "🍀", [...luckRows].sort((a, b) => b.luck - a.luck).slice(0, 10), luckRow)
       + hofList(`Unluckiest seasons, ${L}`, "⛈️", [...luckRows].sort((a, b) => a.luck - b.luck).slice(0, 10), luckRow)
@@ -2793,10 +2987,11 @@
     const pastLuck = [];
     for (const season of state.hist.seasons) {
       if (!season.complete) continue;
-      const lk = luckFromWeeks(seasonWeeksMap(season));
+      const lk = seasonLuck(season);
       for (const t of season.teams) { const x = lk[t.teamId]; if (x && x.games) pastLuck.push({ ...x, year: season.year }); }
     }
-    const nowLuck = luckFromWeeks(seasonWeeksMap(curSeason));
+    ensureInjury(state.hist.seasons.map((x) => x.year), () => refreshRecordViews());
+    const nowLuck = seasonLuck(curSeason);
     for (const t of curSeason.teams) {
       const x = nowLuck[t.teamId]; if (!x || x.games < MIN_LONG) continue;
       const who = identity(curSeason, t), name = esc(fixName(who.name)), scale = regWeeks / x.games;
@@ -3291,7 +3486,7 @@
     try { state.me ? localStorage.setItem("boc-me", state.me) : localStorage.removeItem("boc-me"); } catch {}
     const card = $("meCard");
     card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");
-    if (state.wk) { renderScoreboard(); renderPecking(); renderPicks(); }
+    if (state.wk) { renderScoreboard(); renderPecking(); renderMedianWatch(); renderPicks(); }
     renderPot();
     renderMe(); markMe(); renderStandings();
     if (state.awards) renderAwards();
@@ -3323,7 +3518,7 @@
       const wk = await getJSON(`/api/week?week=${week}`);
       if (week !== state.week) return;
       state.wk = wk;
-      renderScoreboard(); renderPecking(); renderPicks(); renderMe(); markMe(); renderPot();
+      renderScoreboard(); renderPecking(); renderMedianWatch(); renderPicks(); renderMe(); markMe(); renderPot();
       if (!quiet || isOn("pickem")) loadPicks();
       const live = weekLive() && wkSides().some((s) => s.current > 0);
       $("liveDot").classList.toggle("live", live);
@@ -3387,6 +3582,7 @@
     if (n === "history" || n === "seasons") renderHistory();
     if (n === "pot" && $("pot")) renderPot();
     if (n === "sharks") renderPecking();
+    if (n === "medianwatch") renderMedianWatch();
     if (n === "power" && CFG.powerRankings) renderPower();
     if (n.startsWith("tiers")) renderTierFor(n.slice(5));
     if (n === "draft") renderDraft();

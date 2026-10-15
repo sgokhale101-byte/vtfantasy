@@ -1,4 +1,4 @@
-// Half-PPR season points computed from raw NFL stats, so every season uses the same scoring.
+// Full-PPR season points computed from raw NFL stats, so every season uses the same scoring (VT is full PPR).
 import { BASE, espnFetch } from "./espn.mjs";
 import { POS } from "./model.mjs";
 
@@ -14,11 +14,11 @@ const WEIGHTS = {
   42: 0.1,   // receiving yards
   43: 6,     // receiving TDs
   44: 2,     // receiving 2-pt conversions
-  53: 0.5,   // receptions
+  53: 1,     // receptions (full PPR)
   72: -2,    // fumbles lost
 };
 const r2 = (n) => Math.round(n * 100) / 100;
-export const HALF_PPR_NOTE = "Half-PPR: 0.04 per passing yard, 4 per passing TD, -2 per interception, 0.1 per rushing or receiving yard, 6 per rushing or receiving TD, 0.5 per catch, -2 per fumble lost, 2 per two-point conversion.";
+export const HALF_PPR_NOTE = "Full PPR: 0.04 per passing yard, 4 per passing TD, -2 per interception, 0.1 per rushing or receiving yard, 6 per rushing or receiving TD, 1 per catch, -2 per fumble lost, 2 per two-point conversion.";
 
 export function halfPprFromRaw(stats) {
   if (!stats) return null;
@@ -70,7 +70,7 @@ async function publicPlayers(year, filter) {
 const STAT_NAMES = {
   passingYards: 0.04, passingTouchdowns: 4, interceptions: -2,
   rushingYards: 0.1, rushingTouchdowns: 6,
-  receptions: 0.5, receivingYards: 0.1, receivingTouchdowns: 6,
+  receptions: 1, receivingYards: 0.1, receivingTouchdowns: 6,
   fumblesLost: -2,
 };
 const GP_NAMES = ["gamesPlayed"];
