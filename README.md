@@ -1,11 +1,11 @@
-# VT Fantasy dashboard (v1.0)
+# VT Fantasy dashboard (v1.1)
 
 Live dashboard for ESPN league 1299098102, built from the Boys of Chantilly dashboard (v2.4.2).
 
 ## Tabs
 - **Live:** Food Chain, Scoreboard, The Sharks
 - **The Week:** Standings, Story (Team of the Week, Record Watch, Trending), Awards, Transactions, Waivers
-- **Social:** Pick 'em, Tier Lists (Noah and Sean), Power Rankings
+- **Social:** Pick 'em, Noah's Tier List, Sean's Tier List (no Power Rankings: `CFG.powerRankings` is off)
 - **Library:** Manager Profiles, Final Standings, Hall of Fame, Draft, Trade Review
 
 ## League settings
@@ -32,3 +32,7 @@ token kept on that phone; POST `save` stores the list (Netlify Blobs, `tiers/v1`
 
 ## Deploy
 Publish directory `public`, functions in `netlify/functions` (netlify.toml sets both). Deploy from GitHub.
+
+## 1.1
+- Social tab: Pick 'em, then one section per tier list editor ("Noah's Tier List", "Sean's Tier List"), each with its own
+  jump-bar button. Power Rankings removed (section, background check, and badge), controlled by `CFG.powerRankings`.

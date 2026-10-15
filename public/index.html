@@ -1203,21 +1203,9 @@
     </section>
   </div>
 
-  <div class="panel" id="panel-tiers" role="tabpanel" hidden>
-    <section aria-labelledby="tierH">
-      <div class="aw-pick"><h2 id="tierH">Tier Lists</h2><div class="toggle tier-who" id="tierWho" role="group" aria-label="Whose tier list"></div></div>
-      <details class="explain"><summary>Explain It</summary><p class="note">Noah and Sean each keep their own S through D tier list. Anyone can read them. To edit, Noah or Sean picks himself in "I'm ___" and enters the tier list password once on that phone. Teams start out unranked; you can also add anything else you want to rank.</p></details>
-      <div id="tiers"></div>
-    </section>
-  </div>
+  <!-- tier list panels (one per editor) are added by the script from CFG.tierEditors -->
+  <div id="tierPanels"></div>
 
-  <div class="panel" id="panel-power" role="tabpanel" aria-labelledby="tab-power" hidden>
-    <section aria-labelledby="powH">
-      <div class="aw-pick"><h2 id="powH">Power Rankings</h2><label class="me-pick" id="powPickWrap" hidden><span>Show</span><select id="powPick" aria-label="Choose a power rankings post"></select></label></div>
-      <details class="explain"><summary>Explain It</summary><p class="note">Straight from the league message board: every post titled like "Power Rankings after Week N", one edition per week. Pick one from the dropdown.</p></details>
-      <div id="power"></div>
-    </section>
-  </div>
 
   <div class="panel" id="panel-hof" role="tabpanel" aria-labelledby="tab-hof" hidden>
     <section aria-labelledby="hofH">
@@ -1337,6 +1325,7 @@
     weeklyPot: false,       // no weekly pot
     powerAuthor: "",        // whose posts count as power rankings ("" = anyone's titled "Power Rankings ... Week N")
     tierEditors: ["noah", "sean"], // first names who can edit their own tier list (password protected)
+    powerRankings: false,   // no Power Rankings section in this league
   };
   const POS = { 1: "QB", 2: "RB", 3: "WR", 4: "TE", 5: "K", 16: "D/ST" };
   // Top-level tabs. Live, The Week, and Library each hold several sections with a jump bar.
@@ -1344,7 +1333,7 @@
   const GROUPS = {
     live: [["pecking", "Food Chain"], ["scoreboard", "Scoreboard"], ...(CFG.weeklyPot ? [["pot", "Weekly Pot"]] : []), ["sharks", "The Sharks"]],
     week: [["standings", "Standings"], ["story", "Story"], ["awards", "Awards"], ["moves", "Transactions"], ["waivers", "Waivers"]],
-    social: [["pickem", "Pick 'em"], ["tiers", "Tier Lists"], ["power", "Power Rankings"]],
+    social: [["pickem", "Pick 'em"], ...CFG.tierEditors.map((w) => [`tiers${w}`, `${w.charAt(0).toUpperCase() + w.slice(1)}'s Tier List`]), ...(CFG.powerRankings ? [["power", "Power Rankings"]] : [])],
     library: [["history", "Manager Profiles"], ["seasons", "Final Standings"], ["hof", "Hall of Fame"], ["draft", "Draft"], ["trades", "Trade Review"]],
   };
   const SECTION_GROUP = Object.fromEntries(Object.entries(GROUPS).flatMap(([g, list]) => list.map(([id]) => [id, g])));
@@ -2449,10 +2438,9 @@
       else setPowerBadge(powerSeen() !== newest);
     } catch {}
   }
-  setTimeout(checkPower, 4000);
-  setInterval(checkPower, 10 * 60 * 1000);
+  if (CFG.powerRankings) { setTimeout(checkPower, 4000); setInterval(checkPower, 10 * 60 * 1000); }
 
-  $("powPick").onchange = (e) => { state.powerIdx = Number(e.target.value); renderPower(); };
+  if ($("powPick")) $("powPick").onchange = (e) => { state.powerIdx = Number(e.target.value); renderPower(); };
 
   // ---------- Trade block ----------
   async function renderTradeBlock() {
@@ -3085,6 +3073,17 @@
 
   // ---------- Tier Lists (Noah and Sean) ----------
   const TIER_ROWS = ["S", "A", "B", "C", "D"];
+  // One section per editor: "Noah's Tier List", "Sean's Tier List"
+  (() => {
+    const host = $("tierPanels");
+    host.outerHTML = CFG.tierEditors.map((w) => `<div class="panel" id="panel-tiers${w}" role="tabpanel" hidden>
+      <section aria-labelledby="tierH-${w}">
+        <h2 id="tierH-${w}">${w.charAt(0).toUpperCase() + w.slice(1)}'s Tier List</h2>
+        <details class="explain"><summary>Explain It</summary><p class="note">${w.charAt(0).toUpperCase() + w.slice(1)}'s S through D tier list. Anyone can read it. To edit, ${w.charAt(0).toUpperCase() + w.slice(1)} picks himself in "I'm ___" and enters the tier list password once on that phone. Teams start out unranked; anything else can be added to rank too.</p></details>
+        <div id="tiers-${w}"></div>
+      </section>
+    </div>`).join("");
+  })();
   const tierToken = (who) => { try { return localStorage.getItem(`boc-tier-${who}`); } catch { return null; } };
   const firstNameOf = (teamId) => {
     const t = teamById(teamId); const m = t && state.league?.members?.find((x) => x.id === (t.primaryOwner || (t.owners || [])[0]));
@@ -3104,22 +3103,22 @@
     return `<span class="tchip"><span>${esc(it)}</span></span>`;
   };
   async function renderTiers() {
-    const box = $("tiers"); if (!box) return;
-    if (!state.tierData && !state.tierErr) { box.innerHTML = `<div class="empty">Loading tier lists…</div>`; await loadTiers(); }
-    if (state.tierErr) { box.innerHTML = `<div class="empty">Couldn't load the tier lists: ${esc(state.tierErr)}</div>`; return; }
-    const D = state.tierData;
-    if (!state.tierView || !CFG.tierEditors.includes(state.tierView)) state.tierView = editorFor(state.me) || CFG.tierEditors[0];
-    $("tierWho").innerHTML = CFG.tierEditors.map((w) => `<button data-tw="${w}" aria-pressed="${w === state.tierView}">${cap(w)}</button>`).join("");
-    const who = state.tierView, list = D.lists?.[who];
+    for (const w of CFG.tierEditors) await renderTierFor(w);
+  }
+  async function renderTierFor(who) {
+    const box = $(`tiers-${who}`); if (!box) return;
+    if (!state.tierData && !state.tierErr) { box.innerHTML = `<div class="empty">Loading…</div>`; await loadTiers(); }
+    if (state.tierErr) { box.innerHTML = `<div class="empty">Couldn't load the tier list: ${esc(state.tierErr)}</div>`; return; }
+    const list = state.tierData.lists?.[who];
     const canEdit = editorFor(state.me) === who && tierToken(who);
-    if (state.tierEditing && canEdit) return renderTierEditor(box, who, list);
+    if (state.tierEditing === who && canEdit) return renderTierEditor(box, who, list);
     const rows = TIER_ROWS.map((t) => `<div class="tier-row"><div class="tier-l t-${t}">${t}</div><div class="tier-items">${(list?.tiers?.[t] || []).map(itemHtml).join("") || `<span class="tier-empty">—</span>`}</div></div>`).join("");
     const when = list?.updated ? new Date(list.updated).toLocaleDateString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : null;
     box.innerHTML = `<div class="tier-board">${rows}</div>
-      <div class="tier-foot"><span>${list ? `${cap(who)}'s list, updated ${when}` : `${cap(who)} hasn't made a tier list yet.`}</span>
-      ${canEdit ? `<button class="tier-btn" id="tierEdit">Edit my list</button>` : editorFor(state.me) === who ? `<button class="tier-btn" id="tierUnlock">Unlock to edit</button>` : ""}</div>`;
-    const e = $("tierEdit"); if (e) e.onclick = () => { state.tierEditing = true; state.tierDraft = null; renderTiers(); };
-    const u = $("tierUnlock"); if (u) u.onclick = () => promptTierPassword(who);
+      <div class="tier-foot"><span>${list ? `Updated ${when}` : `${cap(who)} hasn't made a tier list yet.`}</span>
+      ${canEdit ? `<button class="tier-btn" data-tedit="${who}">Edit my list</button>` : editorFor(state.me) === who ? `<button class="tier-btn" data-tunlock="${who}">Unlock to edit</button>` : ""}</div>`;
+    const e = box.querySelector("[data-tedit]"); if (e) e.onclick = () => { state.tierEditing = who; state.tierDraft = null; renderTierFor(who); };
+    const u = box.querySelector("[data-tunlock]"); if (u) u.onclick = () => promptTierPassword(who);
   }
   function renderTierEditor(box, who, list) {
     // Draft: tier for every item, in order. Teams always appear; custom items can be added.
@@ -3138,33 +3137,33 @@
           <div class="te-pick">${TIER_ROWS.map((t) => `<button class="t-${t} ${d.tier[it] === t ? "on" : ""}" data-set="${t}" aria-label="Tier ${t}">${t}</button>`).join("")}<button class="te-none ${d.tier[it] ? "" : "on"}" data-set="" aria-label="Unranked">–</button></div>
           <div class="te-move"><button data-mv="-1" aria-label="Move up">▲</button><button data-mv="1" aria-label="Move down">▼</button>${custom ? `<button data-del aria-label="Remove">✕</button>` : ""}</div></div>`;
       }).join("")}</div>
-      <div class="te-add"><input id="tierNew" maxlength="60" placeholder="Add something else to rank"><button class="tier-btn" id="tierAdd">Add</button></div>
-      <div class="tier-foot"><button class="tier-btn ghost" id="tierCancel">Cancel</button><span id="tierMsg"></span><button class="tier-btn" id="tierSave">Save</button></div>`;
+      <div class="te-add"><input id="tierNew-${who}" maxlength="60" placeholder="Add something else to rank"><button class="tier-btn" id="tierAdd-${who}">Add</button></div>
+      <div class="tier-foot"><button class="tier-btn ghost" id="tierCancel-${who}">Cancel</button><span id="tierMsg-${who}"></span><button class="tier-btn" id="tierSave-${who}">Save</button></div>`;
     box.querySelectorAll(".te-row").forEach((row) => {
       const it = d.order[Number(row.dataset.i)];
-      row.querySelectorAll("[data-set]").forEach((b) => (b.onclick = () => { d.tier[it] = b.dataset.set; renderTiers(); }));
+      row.querySelectorAll("[data-set]").forEach((b) => (b.onclick = () => { d.tier[it] = b.dataset.set; renderTierFor(who); }));
       row.querySelectorAll("[data-mv]").forEach((b) => (b.onclick = () => {
         const same = d.order.filter((x) => d.tier[x] === d.tier[it]); const k = same.indexOf(it) + Number(b.dataset.mv);
         if (k < 0 || k >= same.length) return;
-        const other = same[k], a = d.order.indexOf(it), c = d.order.indexOf(other); d.order[a] = other; d.order[c] = it; renderTiers();
+        const other = same[k], a = d.order.indexOf(it), c = d.order.indexOf(other); d.order[a] = other; d.order[c] = it; renderTierFor(who);
       }));
-      const del = row.querySelector("[data-del]"); if (del) del.onclick = () => { d.order.splice(d.order.indexOf(it), 1); delete d.tier[it]; renderTiers(); };
+      const del = row.querySelector("[data-del]"); if (del) del.onclick = () => { d.order.splice(d.order.indexOf(it), 1); delete d.tier[it]; renderTierFor(who); };
     });
-    $("tierAdd").onclick = () => {
-      const v = $("tierNew").value.trim().slice(0, 60); if (!v || d.order.some((x) => x.toLowerCase() === v.toLowerCase())) return;
-      d.order.unshift(v); d.tier[v] = ""; renderTiers();
+    box.querySelector("#tierAdd-"+who).onclick = () => {
+      const v = box.querySelector("#tierNew-"+who).value.trim().slice(0, 60); if (!v || d.order.some((x) => x.toLowerCase() === v.toLowerCase())) return;
+      d.order.unshift(v); d.tier[v] = ""; renderTierFor(who);
     };
-    $("tierNew").onkeydown = (e) => { if (e.key === "Enter") $("tierAdd").click(); };
-    $("tierCancel").onclick = () => { state.tierEditing = false; state.tierDraft = null; renderTiers(); };
-    $("tierSave").onclick = async () => {
+    box.querySelector("#tierNew-"+who).onkeydown = (e) => { if (e.key === "Enter") box.querySelector("#tierAdd-"+who).click(); };
+    box.querySelector("#tierCancel-"+who).onclick = () => { state.tierEditing = false; state.tierDraft = null; renderTierFor(who); };
+    box.querySelector("#tierSave-"+who).onclick = async () => {
       const tiers = Object.fromEntries(TIER_ROWS.map((t) => [t, d.order.filter((x) => d.tier[x] === t)]));
-      $("tierMsg").textContent = "Saving…";
+      box.querySelector("#tierMsg-"+who).textContent = "Saving…";
       try {
         const r = await fetch("/api/tiers", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "save", who, token: tierToken(who), tiers }) });
         const j = await r.json();
-        if (!r.ok) { if (r.status === 401) { try { localStorage.removeItem(`boc-tier-${who}`); } catch {} } $("tierMsg").textContent = j.error || "Couldn't save."; return; }
-        state.tierData.lists[who] = j.list; state.tierEditing = false; state.tierDraft = null; renderTiers();
-      } catch { $("tierMsg").textContent = "Couldn't save. Check your connection."; }
+        if (!r.ok) { if (r.status === 401) { try { localStorage.removeItem(`boc-tier-${who}`); } catch {} } box.querySelector("#tierMsg-"+who).textContent = j.error || "Couldn't save."; return; }
+        state.tierData.lists[who] = j.list; state.tierEditing = false; state.tierDraft = null; renderTierFor(who);
+      } catch { box.querySelector("#tierMsg-"+who).textContent = "Couldn't save. Check your connection."; }
     };
   }
   function promptTierPassword(who) {
@@ -3183,12 +3182,11 @@
         const j = await r.json();
         if (!r.ok) { msg.textContent = j.error || "That didn't work."; return; }
         try { localStorage.setItem(`boc-tier-${who}`, j.token); } catch {}
-        close(); state.tierView = who; state.tierEditing = true; state.tierDraft = null;
-        showTab("tiers");
+        close(); state.tierEditing = who; state.tierDraft = null;
+        showTab(`tiers${who}`); renderTierFor(who);
       } catch { msg.textContent = "Couldn't reach the site. Try again."; }
     };
   }
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-tw]"); if (b) { state.tierView = b.dataset.tw; state.tierEditing = false; state.tierDraft = null; renderTiers(); } });
 
   // ---------- "I'm" picker and summary ----------
   const ordinal = (n) => { const v = n % 100; return n + (["th", "st", "nd", "rd"][(v - 20) % 10] || ["th", "st", "nd", "rd"][v] || "th"); };
@@ -3299,7 +3297,7 @@
     if (state.awards) renderAwards();
     const ed = editorFor(state.me);
     if (ed && !tierToken(ed)) promptTierPassword(ed);
-    if (isOn("tiers")) renderTiers();
+    if (CFG.tierEditors.some((w) => isOn(`tiers${w}`))) renderTiers();
   });
   $("meClose").onclick = () => { $("meCard").hidden = true; };
 
@@ -3389,8 +3387,8 @@
     if (n === "history" || n === "seasons") renderHistory();
     if (n === "pot" && $("pot")) renderPot();
     if (n === "sharks") renderPecking();
-    if (n === "power") renderPower();
-    if (n === "tiers") renderTiers();
+    if (n === "power" && CFG.powerRankings) renderPower();
+    if (n.startsWith("tiers")) renderTierFor(n.slice(5));
     if (n === "draft") renderDraft();
     if (n === "trades") renderTrades();
     if (n === "moves") { renderTradeBlock(); renderTxStats(); }
