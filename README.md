@@ -1,4 +1,4 @@
-# VT Fantasy dashboard (v1.6.2)
+# VT Fantasy dashboard (v1.6.4)
 
 Live dashboard for ESPN league 1299098102, built from the Boys of Chantilly dashboard (v2.4.2).
 
@@ -144,3 +144,17 @@ Publish directory `public`, functions in `netlify/functions` (netlify.toml sets 
   - All-star team by season: the same for one season's players, with the manager who had each one (others listed if he
     moved). Ranked among finished seasons; the season in progress shows where it's on pace to land (40% of weeks so far).
 - `/api/history?part=alltime` now returns games played and each player's position rank (cache `hist/alltime/v2/Y`).
+
+## 1.6.3
+- All-Time views renamed: Team Rankings, All Stars: By Manager, All Stars: By Year.
+- Tap the PPG strip for a pop-up of the team at that spot (team, manager, year, PPG, all-time rank, regular-season and
+  final finish, record, and a link to the roster).
+- Finished seasons only: the season in progress is left out of every All-Time view until it's over.
+- All Stars: By Manager: a player must have started at least 10 games for that manager in that season (`AT_MIN_STARTS`).
+
+## 1.6.4
+- All Stars: By Year: a player needs at least 10 games played that season (`AT_MIN_GAMES_YEAR`).
+- Team roster pop-up (everywhere it opens): Player, Pos, PPG, Rank (e.g. RB12), sorted by position then rank; the "How"
+  column is gone. PPG and rank come from the league's weekly rosters (same numbers as All-Time): points per game played
+  while on a league roster that season, and position rank by those points. Rosters now include player ids
+  (`hist/roster/v2`); all-time data keeps every rostered player (`hist/alltime/v3`).
