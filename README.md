@@ -1,4 +1,4 @@
-# VT Fantasy dashboard (v1.3.4)
+# VT Fantasy dashboard (v1.6.2)
 
 Live dashboard for ESPN league 1299098102, built from the Boys of Chantilly dashboard (v2.4.2).
 
@@ -82,3 +82,65 @@ Publish directory `public`, functions in `netlify/functions` (netlify.toml sets 
 ## 1.3.4
 - Home-screen icon: the VT logo is built into the page (apple-touch-icon and favicon as data URIs) and the manifest is
   requested with credentials, so phones get the logo even with Netlify's visitor login turned on.
+
+## 1.4
+- Injury luck uses value over replacement (VORP). A missed game now costs the player's healthy average minus replacement
+  level at his position: the points per start of the first player past the league's starting spots there (players with
+  3+ starts that season, ranked; spots counted from how many each team actually started at that position, so flex use is
+  included). It's the same for every team, so a deep bench shows up as skill instead of luck. Leaving early and being
+  started but not playing still cost his healthy average minus what he scored. Each season's replacement levels are in the
+  injury data (`replacement`).
+- Fixed the week-1 gap: a regular starter is now someone who started 2 of his last 3 available weeks, or every available
+  week if he has had fewer than 3, so a player hurt in week 1 counts from week 2.
+- Early draft picks (rounds 1-6) hurt before they could become regular starters, including preseason injuries, now count
+  while on the roster (or after being dropped, if they never play again that season). With no healthy games to go on,
+  they're valued at what the player at their draft rank at that position averaged (3rd RB taken = 3rd-best RB).
+- Injury cache moved to `hist/injury/v2/Y`, so every season is recalculated once.
+
+## 1.5
+- Injury luck now measures what injuries actually cost each team, roster included: the best lineup the team could have set
+  with its injured players at their expected points, minus the best lineup it could actually set, plus expected minus
+  scored for starters locked into the lineup (left early, started but didn't play). A deep bench softens the hit. The
+  league-wide replacement version from 2.7 is kept and shown in profiles as "vs. replacement" (`vorLuck`).
+- Expected points: healthy average from every game the player played at a normal snap share (starter or bench), blended
+  with a prior worth 3 games (last season's points per game from nflverse stats, scaled to league scoring; for a rookie
+  early pick, the value of his draft slot), times his NFL team's Vegas implied total that week over its average in his
+  healthy games (0.8-1.25), times a fill-in factor for missed weeks: how much his position group's points rose without
+  him (Vegas-adjusted) against the league-wide norm for that position, at most half weight and less with few weeks
+  (0.8-1.3).
+- Detection: any rostered player (bench or IR) out hurt counts; suspensions (R40), players who left the team, cuts and
+  healthy scratches don't (nflverse weekly roster status); injured reserve, PUP and NFI always count. Left early now also
+  checks that week's injury report, and covers players who normally play 20%+ of snaps (was 40%).
+- New public data (cached in Blobs): `stats_player_week_Y.csv` (`nflverse/stats/v1/Y`), `roster_weekly_Y.csv`
+  (`nflverse/rost/v1/Y`), `schedules/games.csv` (`nflverse/lines/v1`, 12 hours). Weekly ESPN data now keeps the whole
+  roster with points (`hist/week/v3`, `weeksum/v5`), so history re-pulls once. Injury cache `hist/injury/v3/Y`.
+
+## 1.6
+- New Library section, All-Time (jump-bar button after Final Standings): every team from every season ranked by
+  regular-season points per game. Views: Every team (10 per page, Best first / Worst first, a "Next <manager> team" jump,
+  and the selected manager's teams highlighted), By manager (that manager's teams with the year and all-time rank), and
+  By year (that season's teams with the manager and all-time rank). A strip at the top shows every team's PPG at once,
+  with the manager's teams (or the chosen season's) marked. Tap any team for its roster.
+- Injury luck: suspensions that start after the player has played that season now count (a surprise, like an injury).
+  Suspensions known before the season (already in his draft price), cuts and healthy scratches still don't.
+
+## 1.6.1
+- All-Time moved between Draft and Trade Review.
+- Its other two views are now lineups instead of team lists. Manager's all-time team: the best lineup from every player that
+  manager ever had (each player's best season with him: regular-season points while on his roster, starting or bench),
+  with the year and weeks, plus the next 5 best. Season's all-time team: the best lineup from that season's players, with
+  the manager who had each one (most weeks; other teams listed if he moved). Slots follow the league's current lineup
+  settings. New endpoint `/api/history?part=alltime&season=Y` (cache `hist/alltime/v1/Y`).
+
+## 1.6.2
+- All-Time rebuilt as three views:
+  - Team rankings: every team from every season by regular-season PPG, with regular-season finish (Reg.) and final
+    standings (Final). Highest / Lowest PPG, filters for manager and season, 10 per page with first/previous/next/last,
+    and a strip showing every team at once (filtered teams marked).
+  - All-star team by manager: best QB/RB/RB/WR/WR/TE/FLEX/D/ST/K by PPG from every player that manager ever had (PPG
+    while on his roster, games played, regular season; each player once), with the year, position rank that season and
+    games. Combined PPG and its rank among all managers (tap for the full ranking). A player needs 40% of a full regular
+    season with him.
+  - All-star team by season: the same for one season's players, with the manager who had each one (others listed if he
+    moved). Ranked among finished seasons; the season in progress shows where it's on pace to land (40% of weeks so far).
+- `/api/history?part=alltime` now returns games played and each player's position rank (cache `hist/alltime/v2/Y`).
